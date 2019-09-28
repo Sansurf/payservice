@@ -22,7 +22,7 @@
 namespace app\controllers;
 
 use yii\web\Controller;
-use app\models\AddPayment;
+use app\jobs\PaymentJob;
 
 
 /**
@@ -64,7 +64,7 @@ class PayGetController extends Controller
                 else
                     $total = $sum;
 
-                $this->queueAdd(new AddPayment([
+                $this->queueAdd(new PaymentJob([
                     'user_id' => $userId,
                     'sum' => $total
                 ]));
@@ -85,8 +85,8 @@ class PayGetController extends Controller
     private function queueAdd($data)
     {
         if ($id = \Yii::$app->queue->push($data))
-//        if (\Yii::$app->queue->run($id))
-            return true;
+            if (\Yii::$app->queue->run(false))
+                return $id;
 
         return false;
     }

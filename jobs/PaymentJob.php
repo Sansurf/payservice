@@ -1,16 +1,24 @@
 <?php
 
-namespace app\models;
+namespace app\jobs;
 
+use app\models\Payment;
+use app\models\UserWallet;
 use yii\base\BaseObject;
 use yii\queue\JobInterface;
 
 
-class AddPayment extends BaseObject implements JobInterface
+/**
+ * Class PaymentJob.
+ */
+class PaymentJob extends BaseObject implements JobInterface
 {
     public $user_id;
     public $sum;
 
+    /**
+     * @inheritdoc
+     */
     public function execute($queue)
     {
         // Добавляем или обновляем запись в user_wallet

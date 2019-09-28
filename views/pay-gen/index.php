@@ -13,7 +13,7 @@ $(document).ready(function() {
     setInterval(function(){ location.reload(); }, 20000);
 });
 JS;
-//$this->registerJs($script);
+$this->registerJs($script);
 ?>
 
 <p class="container">
