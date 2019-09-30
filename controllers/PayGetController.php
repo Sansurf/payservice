@@ -34,7 +34,7 @@ class PayGetController extends Controller
 {
     public function actionIndex()
     {
-        if ($_POST | $_COOKIE) {
+        if ($_POST && $_COOKIE) {
             if ($this->verifyKey()) {
                 if ($this->send()) {
                     echo "Данные добавлены в очередь";

@@ -3,7 +3,7 @@
 use yii\db\Migration;
 
 /**
- * Handles the creation of table `{{%queue}}`.
+ * Handles the creation of table `queue`.
  */
 class m190921_134446_create_queue_table extends Migration
 {
@@ -35,6 +35,6 @@ class m190921_134446_create_queue_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable('{{%queue}}');
+        $this->dropTable('queue');
     }
 }

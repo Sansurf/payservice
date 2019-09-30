@@ -3,7 +3,7 @@
 use yii\db\Migration;
 
 /**
- * Handles the creation of table `{{%payment}}`.
+ * Handles the creation of table `payment`.
  */
 class m190925_201332_create_payment_table extends Migration
 {
@@ -12,7 +12,7 @@ class m190925_201332_create_payment_table extends Migration
      */
     public function safeUp()
     {
-        $this->createTable('{{%payment}}', [
+        $this->createTable('payment', [
             'id' => $this->primaryKey(),
             'user_id' => $this->integer(),
             'sum' => $this->float(1)
@@ -41,6 +41,6 @@ class m190925_201332_create_payment_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable('{{%payment}}');
+        $this->dropTable('payment');
     }
 }

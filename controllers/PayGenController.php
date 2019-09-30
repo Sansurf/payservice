@@ -104,10 +104,11 @@ class PayGenController extends Controller
         curl_setopt($ch, CURLOPT_POSTFIELDS, "data=$this->pack");
         curl_setopt($ch, CURLOPT_COOKIE, "key=$this->key");
         $out = curl_exec($ch);
-        curl_close($ch);
 
-        if ($out)
+        if ($out) {
+            curl_close($ch);
             return $out;
+        }
         else
             return "cURL Error: " . curl_error($ch);
     }

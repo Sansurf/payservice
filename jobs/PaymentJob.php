@@ -22,13 +22,12 @@ class PaymentJob extends BaseObject implements JobInterface
     public function execute($queue)
     {
         // Добавляем или обновляем запись в user_wallet
-        $wallet = UserWallet::findOne($this->user_id);
-        if ($wallet) {      // если клиент найден - добавляем к имеющейся сумме
-            $wallet->sum = $wallet->sum + $this->sum;
-        } else {            // если не найден - создаем
-            $wallet = new UserWallet();
+        if ($wallet = UserWallet::findOne($this->user_id)) {
+            $wallet->sum = $wallet->sum + $this->sum;   // если клиент найден - добавляем к имеющейся сумме
+        } else {
+            $wallet = new UserWallet();                 // если не найден - создаем
             $wallet->setIsNewRecord(true);
-            $wallet->id = $this->id;
+            $wallet->id = $this->user_id;
             $wallet->sum = $this->sum;
         }
         $wallet->save();
