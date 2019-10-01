@@ -38,6 +38,15 @@ class PayGetController extends Controller
             if ($this->verifyKey()) {
                 if ($this->send()) {
                     echo "Данные добавлены в очередь";
+
+//                    $redis = \Yii::$app->redis;
+//                    while ($redis->hlen('queue') > 0) {
+//                        $result = $redis->rpop('queue');
+//                        $this->saveDB(new PaymentJob([
+//                            'user_id' => $redis->hget($result, 'user_id'),
+//                            'sum' => $redis->hget($result, 'sum'),
+//                        ]));
+//                    }
                 }
                 else
                     echo "Данные не удалось добавить в очередь";
@@ -46,7 +55,9 @@ class PayGetController extends Controller
     }
 
     /**
-     * Высчитывает сумму с коммиссией и передает на добавление в очередь
+     * Высчитывает сумму с коммиссией и отправляет в очередь
+     *
+     * @return bool
      */
     private function send()
     {
@@ -56,7 +67,6 @@ class PayGetController extends Controller
                 $commission = $entry['commission'];
                 $userId = $entry['user_id'];
 
-                $total = 0; // сумма с учетом коммиссии
                 if ($commission < 1)
                     $total = $sum * $commission;
                 elseif ($commission > 1)
@@ -68,11 +78,13 @@ class PayGetController extends Controller
                     'user_id' => $userId,
                     'sum' => $total
                 ]));
-            }
 
+//                $redis = \Yii::$app->redis;
+//                $redis->hmset($key, 'user_id', $userId, 'sum', $total);
+//                $redis->lpush('queue', $key);
+            }
             return true;
         }
-
         return false;
     }
 

@@ -16,9 +16,15 @@ $config = [
         'queue' => [
             'class' => \yii\queue\db\Queue::class,
             'db' => 'db', // Компонент подключения к БД или его конфиг
-            'tableName' => '{{%queue}}', // Имя таблицы
+            'tableName' => 'queue', // Имя таблицы
             'channel' => 'default', // Выбранный для очереди канал
             'mutex' => \yii\mutex\MysqlMutex::class, // Мьютекс для синхронизации запросов
+        ],
+        'redis' => [
+            'class' => 'yii\redis\Connection',
+            'hostname' => 'localhost',
+            'port' => 6379,
+            'database' => '0',
         ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation

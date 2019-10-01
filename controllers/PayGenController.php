@@ -35,18 +35,17 @@ class PayGenController extends Controller
      */
     public function actionIndex()
     {
+        $resp = '';
         if ($data = $this->createDataPack()) {
-            if ($this->savePackLocally('../runtime/data.json', $this->pack)) {
+            if ($this->savePackLocally($data)) {
                 if ($resp = $this->send())
                     \YII::$app->session->setFlash('writed', 'Данные сохранены и отправлены');
                 else
                     \YII::$app->session->setFlash('notWrited', 'Не удалось сохранить или отправить данные');
-
-                return $this->render('index', ['data' => $data, 'resp' => $resp]);
             }
         }
 
-        return false;
+        return $this->render('index', ['data' => $data, 'resp' => $resp]);
     }
 
     /**
@@ -75,19 +74,23 @@ class PayGenController extends Controller
     }
 
     /**
-     * Сохраняет Пакет с запросами в файл
+     * Сохраняет данные локально
+     * ВНИМАНИЕ! Очищает текущую базу перед добавлением данных
      *
-     * @param string    $path   Путь для сохранения файла
-     * @param string    $data   Данные для сохранения
-     * @return boolean
+     * @param array $data Данные для сохранения
+     * @return bool
      */
-    private function savePackLocally($path, $data)
+    private function savePackLocally(array $data)
     {
-        $writeData = file_put_contents($path, $data, FILE_APPEND);
+        $redis = \Yii::$app->redis;
+        $redis->flushdb();
+        foreach ($data as $key => $pack) {
+            foreach ($pack as $field => $value) {
+                $redis->hset('billing'.$key, $field, $value);
+            }
+        }
 
-        if ($writeData) return true;
-
-        return false;
+        return true;
     }
 
     /**
@@ -108,8 +111,8 @@ class PayGenController extends Controller
         if ($out) {
             curl_close($ch);
             return $out;
-        }
-        else
+        } else {
             return "cURL Error: " . curl_error($ch);
+        }
     }
 }
